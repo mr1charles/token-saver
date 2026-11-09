@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>token-saver</title>
+<style>:root{--bg:#fff;--fg:#1a1a1a;--mut:#666;--ac:#c2410c;--card:#f5f5f4}
+@media(prefers-color-scheme:dark){:root{--bg:#161514;--fg:#eee;--mut:#a8a29e;--ac:#fb923c;--card:#24211f}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 16px}h1{margin:0 0 4px}h2{margin-top:32px}
+p.s{color:var(--mut);margin-top:0}pre{background:var(--card);padding:12px;border-radius:8px;overflow:auto}
+code{background:var(--card);padding:1px 5px;border-radius:4px}pre code{padding:0}a{color:var(--ac)}li{margin:4px 0}</style></head>
+<body><main>
+<h1>token-saver</h1><p class="s">A Claude Code skill that stops sessions from burning tokens.</p>
+<h2>Why sessions get expensive</h2>
+<p>Every turn pays for the <b>fixed context</b> (system prompt, tool names, connector instructions, skill list, memory files) plus the <b>whole conversation again</b>. The history part grows each turn and is usually the bigger bill.</p>
+<h2>Install</h2>
+<pre><code>git clone https://github.com/mr1charles/token-saver
+cp -r token-saver/skills/token-saver ~/.claude/skills/</code></pre>
+<p>Then ask Claude "audit my token use", or run <code>python3 ~/.claude/skills/token-saver/scripts/audit.py</code>.</p>
+<h2>The rules</h2>
+<ol><li>One task per session; <code>/clear</code> at ~150k tokens.</li><li><code>/compact</code> after long tool-heavy stretches.</li>
+<li>Read small: grep, head, tail, line ranges.</li><li>Images at 900 px wide or less.</li><li>Batch independent tool calls.</li>
+<li>Skip subagents unless clearly worth it.</li><li>Run long jobs in the background; read the last lines only.</li>
+<li>Short answers, no recap.</li><li>Keep instruction files under ~40 lines.</li></ol>
+<h2>Cut fixed context</h2>
+<ul><li>Turn off unused plugins in <code>settings.json</code> (<code>enabledPlugins</code>).</li><li>Deny unused connectors with <code>permissions.deny</code> (<code>mcp__claude_ai_Name</code>).</li><li>Verify with <code>/context</code>.</li></ul>
+<p class="s">Token numbers from the audit script are rough (about 4 characters per token). <a href="https://github.com/mr1charles/token-saver">Source on GitHub</a></p>
+</main></body></html>
